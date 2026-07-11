@@ -1,57 +1,54 @@
 # Pooja Store — Design Directions
 
-Three distinct visual design directions for a pooja store e-commerce homepage,
-built as a static demo for client design approval.
+Static demo of a pooja store, built for client design approval.
 
-All three share the **same Zepto-style cart interaction** (add-to-cart stepper
-directly on product cards, sticky cart bar, expandable cart drawer, and an
-"Order on WhatsApp" checkout) — only the typography, colour, layout and
-personality differ, so the UX comparison stays apples-to-apples.
+The **Traditional** and **Minimal** directions are now full **quick-commerce
+app** layouts (Zepto / Blinkit style) — the same feature set and UX, styled two
+different ways so the comparison stays apples-to-apples. **Bold** remains a
+simpler single-page bento concept as an alternate look.
 
-Design language is **English-only and product-first** — clean modern retail,
-no religious ornamentation. Every direction uses a **bento grid** (mixed tile
-sizes), is **mobile-first**, and pulls in **real photography** so the client
-can picture the finished store.
+Design language is **English-only and product-first** — modern retail, no
+religious ornamentation. Everything is **mobile-first** and pulls in **real
+Unsplash photography** (with a branded SVG fallback, so nothing ever looks
+broken) so the client can picture the finished store.
 
-## The 3 directions
+## The directions
 
 | Folder | Direction | Personality |
 | ------ | --------- | ----------- |
-| [`design-1-traditional`](design-1-traditional/index.html) | **Traditional / Warm** | Warm, hand-made shop feel — terracotta clay, espresso, muted brass gold on warm paper. **Fraunces** serif + **Hind**. Brass-seal monogram, arched feature tile, photo-overlay bento. |
-| [`design-2-minimal`](design-2-minimal/index.html) | **Minimal / Clean** | Premium boutique catalogue — bone white, ink, soft gold. **Cormorant** display + **Manrope**. Hairline gold rules, serif section numerals, gallery cards, lots of whitespace. |
-| [`design-3-bold`](design-3-bold/index.html) | **Bold / Modern** | Energetic but disciplined — deep plum with sunset-orange / coral / amber. **Space Grotesk** + **Manrope**. Gradient headline, soft blob shapes, colour-blocked bento. |
+| [`design-1-traditional`](design-1-traditional/index.html) | **Traditional / Warm** | Warm, hand-made shop feel — terracotta clay, espresso, brass gold on warm paper. **Fraunces** serif + **Hind**. Serif prices, brass rating pills, warm clay cart bar. |
+| [`design-2-minimal`](design-2-minimal/index.html) | **Minimal / Clean** | Premium boutique — bone white, ink, soft gold, hairline borders, lots of light. **Cormorant** display serif + **Manrope**. Flat cards, ink cart bar. |
+| [`design-3-bold`](design-3-bold/index.html) | **Bold / Modern** | Energetic but disciplined — deep plum with sunset-orange / coral / amber. **Space Grotesk** + **Manrope**. Colour-blocked bento (single-page concept). |
 
-## How to view
+## What's in the quick-commerce apps (Traditional & Minimal)
 
-No build step, no server, no dependencies. Just open any of these in a browser:
-
-- `design-1-traditional/index.html`
-- `design-2-minimal/index.html`
-- `design-3-bold/index.html`
-
-## Cart demo (fully functional)
-
-- **+ / stepper** on each product card adds/removes instantly
-- **Sticky cart bar** appears with live item count + running total
-- **Tap the bar** to expand the cart summary (change quantities inline)
-- **Order on WhatsApp** builds a `wa.me` link pre-filled with the cart items,
+- **PIN-code delivery gate** on entry — serviceable PINs `560087 / 560066 /
+  560037` open the store; anything else shows a "we don't deliver there yet"
+  message and blocks entry. A `📍 PIN` badge in the header reopens it.
+- **Search** (with live filtering + suggestions) and **shop-by-category** rail
+- **Product rails** — Popular, Best sellers, Recommended, Recently viewed
+- **Promo carousel**, **festival collection** banner, **customer reviews**
+- **Product quick-view** sheet (gallery, details, bundle & similar items)
+- **Zepto-style cart** — `ADD` / stepper on every card, sticky cart bar with
+  live total, slide-up cart drawer with coupon field
+- **Checkout on WhatsApp** — builds a `wa.me` link pre-filled with items,
   quantities and total
+- **Mobile bottom nav**, floating WhatsApp button, back-to-top
 
 State is in-memory only (vanilla JS) — nothing is persisted or fetched.
 
-## Images
+## How to view
 
-Product tiles and the hero use **real Unsplash photography** loaded directly by
-the browser. Each tile also has a matching colour-gradient + icon base layer, so
-if a photo is ever unavailable the tile still looks intentional (never a broken
-box). Swap in the shop's own product photos by editing the `img` values in
-`script.js`.
+No build step, no server, no dependencies — just open any `index.html` in a
+browser.
 
-## Going live — two placeholders to swap
+## Going live — placeholders to swap
 
-- **WhatsApp number** — replace `91XXXXXXXXXX` (`SHOP_NUMBER` at the top of each
-  `script.js`).
-- **Product photos** — replace the Unsplash `img` URLs in the `PRODUCTS` array.
+- **WhatsApp number** — `SHOP_NUMBER` at the top of each `script.js`
+  (currently `91XXXXXXXXXX`).
+- **Serviceable PIN codes** — `SERVICEABLE` array in `script.js`.
+- **Product photos** — the Unsplash `image` URLs in the `PRODUCTS` /
+  `CATEGORIES` arrays in `script.js`.
 
 ---
 
