@@ -1,221 +1,207 @@
-// ============================================
-// Satvik & Co. — Cart Engine (in-memory, vanilla JS)
-// ============================================
+/* ============================================================
+   Pooja Store — shared cart engine (vanilla JS, in-memory)
+   Same logic across all 3 design directions.
+   Zepto-style: + stepper on card · live cart bar · WhatsApp checkout
+   ============================================================ */
 
-const WHATSAPP_NUMBER = "91XXXXXXXXXX"; // placeholder — replace with real shop number
+// --- Config (edit these for the real shop) ---
+const SHOP_NUMBER = '91XXXXXXXXXX';                 // wa.me number placeholder
+const SHOP_NAME = document.body.dataset.shop || 'The Pooja Store';
+const CARD_STYLE = document.body.dataset.cardstyle || 'overlay'; // overlay | catalog
 
-const products = [
-  { id: 1,  name: "Brass Diya — Small",              cat: "Diyas",    emoji: "🪔", price: 149,  bg: "linear-gradient(155deg,#F3EEE6,#E4D3BC)" },
-  { id: 2,  name: "Sandalwood Agarbatti (20 sticks)", cat: "Incense",  emoji: "🕯️", price: 89,   bg: "linear-gradient(155deg,#EFE6DA,#D8C6A8)" },
-  { id: 3,  name: "Steel Pooja Thali Set",            cat: "Thali",    emoji: "🍽️", price: 499,  bg: "linear-gradient(155deg,#EFE6DA,#B08D57)" },
-  { id: 4,  name: "Fresh Coconut (Pair)",             cat: "Coconuts", emoji: "🥥", price: 60,   bg: "linear-gradient(155deg,#F3EEE6,#C9B48C)" },
-  { id: 5,  name: "Pure Camphor (50g)",                cat: "Camphor",  emoji: "✨", price: 40,   bg: "linear-gradient(155deg,#F6F1E8,#E4D3BC)" },
-  { id: 6,  name: "Kumkum & Haldi Combo",              cat: "Kumkum",   emoji: "🌼", price: 75,   bg: "linear-gradient(155deg,#F1DCC4,#C97B5D)" },
-  { id: 7,  name: "Brass Ganesh Idol",                 cat: "Idols",    emoji: "🕉️", price: 899,  bg: "linear-gradient(155deg,#E4D3BC,#8C6D3F)" },
-  { id: 8,  name: "Marigold Flower Garland",           cat: "Garlands", emoji: "🌺", price: 120,  bg: "linear-gradient(155deg,#F1DCC4,#C97B5D)" },
-  { id: 9,  name: "Cotton Wicks — Batti Pack",         cat: "Wicks",    emoji: "🧵", price: 35,   bg: "linear-gradient(155deg,#F6F1E8,#D8C6A8)" },
-  { id: 10, name: "Havan Samagri Kit",                  cat: "Havan",    emoji: "🔥", price: 249,  bg: "linear-gradient(155deg,#EFE6DA,#B08D57)" },
+// --- Catalogue (English names, placeholder prices) ---
+const IMG = id => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=800&q=70`;
+
+const PRODUCTS = [
+  { id: 'lamp',     name: 'Brass Oil Lamp',       cat: 'Lamps',        price: 249,  unit: 'each',        emoji: '🪔', img: IMG('photo-1574161099616-d867c26bd96f'), grad: 'linear-gradient(145deg,#8a4b1e,#c9772f)' },
+  { id: 'incense',  name: 'Rose Incense Sticks',  cat: 'Incense',      price: 99,   unit: 'pack of 20',  emoji: '🌿', img: IMG('photo-1587389342341-0f54e01f6472'), grad: 'linear-gradient(145deg,#7a3b52,#b8657f)' },
+  { id: 'sandal',   name: 'Sandalwood Incense',   cat: 'Incense',      price: 149,  unit: 'premium box', emoji: '🪵', img: IMG('photo-1615568581020-e25f187a02c8'), grad: 'linear-gradient(145deg,#6b4a2a,#a07b45)' },
+  { id: 'thali',    name: 'Brass Prayer Plate',   cat: 'Brassware',    price: 899,  unit: 'full set',    emoji: '✨', img: IMG('photo-1578662996442-48f60103fc96'), grad: 'linear-gradient(145deg,#9a7318,#d4a72c)' },
+  { id: 'turmeric', name: 'Pure Turmeric Powder', cat: 'Essentials',   price: 79,   unit: '100 g',       emoji: '🟡', img: IMG('photo-1615485500704-8e99099d9d09'), grad: 'linear-gradient(145deg,#b8860b,#e0b021)' },
+  { id: 'pot',      name: 'Copper Kalash Pot',    cat: 'Brassware',    price: 649,  unit: 'each',        emoji: '🫖', img: IMG('photo-1605646199346-6014e7a83d2e'), grad: 'linear-gradient(145deg,#8a4b2a,#bd7a44)' },
+  { id: 'garland',  name: 'Fresh Jasmine Garland',cat: 'Fresh Flowers',price: 149,  unit: 'per string',  emoji: '🌸', img: IMG('photo-1629196914168-4f2c8f9d91e5'), grad: 'linear-gradient(145deg,#9c5a3c,#caa06a)' },
+  { id: 'hamper',   name: 'Festive Gift Box',     cat: 'Gifting',      price: 1299, unit: 'curated',     emoji: '🎁', img: IMG('photo-1513475382585-d06e58bcb0e0'), grad: 'linear-gradient(145deg,#7a3b2e,#c26a4a)' },
 ];
 
-let cart = {}; // { productId: qty }
-let drawerOpen = false;
-
-const grid = document.getElementById("productGrid");
-const cartBar = document.getElementById("cartBar");
-const cartDrawer = document.getElementById("cartDrawer");
-const cartCountEl = document.getElementById("cartCount");
-const cartItemsLabel = document.getElementById("cartItemsLabel");
-const cartTotalLabel = document.getElementById("cartTotalLabel");
-const drawerItems = document.getElementById("drawerItems");
-const drawerTotal = document.getElementById("drawerTotal");
-
-function formatPrice(n) {
-  return "₹" + n.toLocaleString("en-IN");
+// Bento tile sizing — feature(0) is the big hero tile, wide(5) a banner, tall(3) a column
+function sizeClass(i) {
+  if (i === 0) return 'tile--feature';
+  if (i === 3) return 'tile--tall';
+  if (i === 5) return 'tile--wide';
+  return '';
 }
 
-function getCartCount() {
-  return Object.values(cart).reduce((sum, q) => sum + q, 0);
-}
+const fmt = n => '₹' + n.toLocaleString('en-IN');
+const state = {};                       // id -> qty
+const byId = id => PRODUCTS.find(p => p.id === id);
 
-function getCartTotal() {
-  return Object.entries(cart).reduce((sum, [id, qty]) => {
-    const p = products.find((pr) => pr.id === Number(id));
-    return sum + p.price * qty;
-  }, 0);
-}
+// --- Element refs ---
+const grid       = document.getElementById('productGrid');
+const cartBar    = document.getElementById('cartBar');
+const cartCount  = document.getElementById('cartCount');
+const cartQty    = document.getElementById('cartQty');
+const cartTotal  = document.getElementById('cartTotal');
+const drawer     = document.getElementById('cartDrawer');
+const drawerItems= document.getElementById('drawerItems');
+const drawerTotal= document.getElementById('drawerTotal');
+const overlay    = document.getElementById('cartOverlay');
+const waBtn      = document.getElementById('whatsappBtn');
 
-function addToCart(id) {
-  cart[id] = (cart[id] || 0) + 1;
-  onCartChange();
-}
-
-function incrementItem(id) {
-  cart[id] = (cart[id] || 0) + 1;
-  onCartChange();
-}
-
-function decrementItem(id) {
-  if (!cart[id]) return;
-  cart[id]--;
-  if (cart[id] <= 0) delete cart[id];
-  onCartChange();
-}
-
-function removeItem(id) {
-  delete cart[id];
-  onCartChange();
-}
-
-function onCartChange() {
-  renderGrid();
-  renderCartBar();
-  renderDrawer();
-  pulseCartBar();
-}
-
-// ---------- Product grid ----------
-function renderGrid() {
-  grid.innerHTML = products
-    .map((p) => {
-      const qty = cart[p.id] || 0;
-      return `
-      <div class="product-card">
-        <div class="product-media" style="background:${p.bg}">
-          <span>${p.emoji}</span>
-        </div>
-        <div class="product-body">
-          <span class="product-cat">${p.cat}</span>
-          <span class="product-name">${p.name}</span>
-          <div class="product-footer">
-            <span class="product-price">${formatPrice(p.price)}</span>
-            ${
-              qty === 0
-                ? `<button class="add-btn" data-add="${p.id}" aria-label="Add ${p.name}">+</button>`
-                : `<div class="stepper">
-                    <button data-dec="${p.id}" aria-label="Decrease">−</button>
-                    <span class="qty">${qty}</span>
-                    <button data-inc="${p.id}" aria-label="Increase">+</button>
-                  </div>`
-            }
-          </div>
-        </div>
+// --- Build the grid once ---
+function buildGrid() {
+  grid.innerHTML = PRODUCTS.map((p, i) => {
+    const media = `
+      <div class="tile-media" style="background:${p.grad}">
+        <span class="tile-emoji" aria-hidden="true">${p.emoji}</span>
+        <img src="${p.img}" alt="${p.name}" loading="lazy"
+             onerror="this.remove()">
       </div>`;
-    })
-    .join("");
+    const price = `<span class="tile-price">${fmt(p.price)}<small>/${p.unit}</small></span>`;
+    const ctrl  = `<div class="tile-ctrl" id="ctrl-${p.id}">${controlHTML(p.id)}</div>`;
 
-  grid.querySelectorAll("[data-add]").forEach((btn) =>
-    btn.addEventListener("click", () => addToCart(Number(btn.dataset.add)))
-  );
-  grid.querySelectorAll("[data-inc]").forEach((btn) =>
-    btn.addEventListener("click", () => incrementItem(Number(btn.dataset.inc)))
-  );
-  grid.querySelectorAll("[data-dec]").forEach((btn) =>
-    btn.addEventListener("click", () => decrementItem(Number(btn.dataset.dec)))
-  );
-}
-
-// ---------- Cart bar ----------
-function renderCartBar() {
-  const count = getCartCount();
-  const total = getCartTotal();
-
-  if (count === 0) {
-    cartBar.classList.add("hidden");
-    cartDrawer.classList.add("hidden");
-    drawerOpen = false;
-    return;
-  }
-
-  cartBar.classList.remove("hidden");
-  cartCountEl.textContent = count;
-  cartItemsLabel.textContent = `${count} item${count > 1 ? "s" : ""}`;
-  cartTotalLabel.textContent = formatPrice(total);
-}
-
-function pulseCartBar() {
-  cartBar.classList.remove("bounce");
-  cartCountEl.classList.remove("bump");
-  void cartBar.offsetWidth; // reflow to restart animation
-  cartBar.classList.add("bounce");
-  cartCountEl.classList.add("bump");
-}
-
-// ---------- Drawer ----------
-function renderDrawer() {
-  const entries = Object.entries(cart);
-
-  if (entries.length === 0) {
-    drawerItems.innerHTML = `<div class="drawer-empty">Your cart is empty</div>`;
-    drawerTotal.textContent = formatPrice(0);
-    return;
-  }
-
-  drawerItems.innerHTML = entries
-    .map(([id, qty]) => {
-      const p = products.find((pr) => pr.id === Number(id));
-      return `
-      <div class="drawer-item">
-        <span class="drawer-item-emoji">${p.emoji}</span>
-        <div class="drawer-item-info">
-          <div class="name">${p.name}</div>
-          <div class="line-price">${formatPrice(p.price)} × ${qty} = ${formatPrice(p.price * qty)}</div>
+    if (CARD_STYLE === 'catalog') {
+      return `<article class="tile ${sizeClass(i)}" data-id="${p.id}">
+        ${media}
+        <div class="tile-body">
+          <span class="tile-cat">${p.cat}</span>
+          <h3 class="tile-name">${p.name}</h3>
+          <div class="tile-foot">${price}${ctrl}</div>
         </div>
-        <div class="stepper">
-          <button data-dec="${p.id}" aria-label="Decrease">−</button>
-          <span class="qty">${qty}</span>
-          <button data-inc="${p.id}" aria-label="Increase">+</button>
-        </div>
+      </article>`;
+    }
+    // overlay style
+    return `<article class="tile ${sizeClass(i)}" data-id="${p.id}">
+      ${media}
+      <div class="tile-scrim"></div>
+      <span class="tile-cat">${p.cat}</span>
+      <div class="tile-content">
+        <h3 class="tile-name">${p.name}</h3>
+        <div class="tile-foot">${price}${ctrl}</div>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+function controlHTML(id) {
+  const q = state[id] || 0;
+  if (q === 0) {
+    return `<button class="add-btn" data-add="${id}" aria-label="Add ${byId(id).name}">Add <span>+</span></button>`;
+  }
+  return `<div class="stepper">
+    <button data-dec="${id}" aria-label="Remove one">−</button>
+    <span class="qty">${q}</span>
+    <button data-inc="${id}" aria-label="Add one">+</button>
+  </div>`;
+}
+
+// --- Cart mutations ---
+function inc(id) { state[id] = (state[id] || 0) + 1; sync(id); bump(id); }
+function dec(id) { if (!state[id]) return; state[id]--; if (state[id] <= 0) delete state[id]; sync(id); }
+
+function sync(changedId) {
+  if (changedId) {
+    const c = document.getElementById('ctrl-' + changedId);
+    if (c) c.innerHTML = controlHTML(changedId);
+  }
+  updateBar();
+  updateDrawer();
+}
+
+// --- Cart bar ---
+function updateBar() {
+  const items = Object.values(state).reduce((a, b) => a + b, 0);
+  const total = Object.entries(state).reduce((a, [id, q]) => a + byId(id).price * q, 0);
+  cartCount.textContent = items;
+  cartQty.textContent = items + (items === 1 ? ' item' : ' items');
+  cartTotal.textContent = fmt(total);
+  cartBar.classList.toggle('show', items > 0);
+  if (items === 0) closeDrawer();
+}
+
+// --- Drawer ---
+function updateDrawer() {
+  const entries = Object.entries(state);
+  if (!entries.length) {
+    drawerItems.innerHTML = `<p class="drawer-empty">Your basket is empty.<br>Tap “Add” on any item to begin.</p>`;
+  } else {
+    drawerItems.innerHTML = entries.map(([id, q]) => {
+      const p = byId(id);
+      return `<div class="drawer-item">
+        <span class="di-emoji" style="background:${p.grad}">${p.emoji}</span>
+        <span class="di-info">
+          <span class="di-name">${p.name}</span>
+          <span class="di-price">${fmt(p.price)} × ${q} = <b>${fmt(p.price * q)}</b></span>
+        </span>
+        <span class="stepper stepper--sm">
+          <button data-dec="${id}" aria-label="Remove one">−</button>
+          <span class="qty">${q}</span>
+          <button data-inc="${id}" aria-label="Add one">+</button>
+        </span>
       </div>`;
-    })
-    .join("");
-
-  drawerItems.querySelectorAll("[data-inc]").forEach((btn) =>
-    btn.addEventListener("click", () => incrementItem(Number(btn.dataset.inc)))
-  );
-  drawerItems.querySelectorAll("[data-dec]").forEach((btn) =>
-    btn.addEventListener("click", () => decrementItem(Number(btn.dataset.dec)))
-  );
-
-  drawerTotal.textContent = formatPrice(getCartTotal());
+    }).join('');
+  }
+  const total = Object.entries(state).reduce((a, [id, q]) => a + byId(id).price * q, 0);
+  drawerTotal.textContent = fmt(total);
 }
 
-function toggleDrawer() {
-  if (getCartCount() === 0) return;
-  drawerOpen = !drawerOpen;
-  cartDrawer.classList.toggle("hidden", !drawerOpen);
+function openDrawer() {
+  if (!Object.keys(state).length) return;
+  drawer.classList.add('open');
+  overlay.classList.add('show');
+  drawer.setAttribute('aria-hidden', 'false');
+}
+function closeDrawer() {
+  drawer.classList.remove('open');
+  overlay.classList.remove('show');
+  drawer.setAttribute('aria-hidden', 'true');
 }
 
-// ---------- WhatsApp checkout ----------
-function buildWhatsAppMessage() {
-  const lines = Object.entries(cart).map(([id, qty]) => {
-    const p = products.find((pr) => pr.id === Number(id));
-    return `${p.emoji} ${p.name} × ${qty} — ${formatPrice(p.price * qty)}`;
+// --- Micro-animations ---
+function bump(id) {
+  cartBar.classList.remove('pulse'); void cartBar.offsetWidth; cartBar.classList.add('pulse');
+  cartCount.classList.remove('pop');  void cartCount.offsetWidth; cartCount.classList.add('pop');
+  const tile = grid.querySelector(`.tile[data-id="${id}"]`);
+  if (tile) { tile.classList.remove('added'); void tile.offsetWidth; tile.classList.add('added'); }
+}
+
+// --- WhatsApp checkout ---
+function orderOnWhatsApp() {
+  const entries = Object.entries(state);
+  if (!entries.length) return;
+  let lines = [`Hello ${SHOP_NAME}! I'd like to place an order:`, ''];
+  let total = 0;
+  entries.forEach(([id, q], i) => {
+    const p = byId(id);
+    const line = p.price * q; total += line;
+    lines.push(`${i + 1}. ${p.name} — ${q} × ${fmt(p.price)} = ${fmt(line)}`);
   });
-
-  return (
-    `Hi! I'd like to order the following from Satvik & Co.:\n\n` +
-    lines.join("\n") +
-    `\n\nTotal: ${formatPrice(getCartTotal())}\n\nPlease confirm availability. Thank you!`
-  );
+  lines.push('', `Total: ${fmt(total)}`, '', 'Please confirm availability. Thank you!');
+  const url = `https://wa.me/${SHOP_NUMBER}?text=${encodeURIComponent(lines.join('\n'))}`;
+  window.open(url, '_blank');
 }
 
-function openWhatsAppOrder() {
-  if (getCartCount() === 0) return;
-  const message = buildWhatsAppMessage();
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
-  window.open(url, "_blank");
-}
-
-// ---------- Wire up static elements ----------
-cartBar.addEventListener("click", toggleDrawer);
-document.getElementById("closeDrawer").addEventListener("click", (e) => {
-  e.stopPropagation();
-  drawerOpen = false;
-  cartDrawer.classList.add("hidden");
+// --- Events (delegated) ---
+grid.addEventListener('click', e => {
+  const add = e.target.closest('[data-add]');
+  const up  = e.target.closest('[data-inc]');
+  const dn  = e.target.closest('[data-dec]');
+  if (add) inc(add.dataset.add);
+  else if (up) inc(up.dataset.inc);
+  else if (dn) dec(dn.dataset.dec);
 });
-document.getElementById("whatsappBtn").addEventListener("click", openWhatsAppOrder);
+drawerItems.addEventListener('click', e => {
+  const up = e.target.closest('[data-inc]');
+  const dn = e.target.closest('[data-dec]');
+  if (up) inc(up.dataset.inc);
+  else if (dn) dec(dn.dataset.dec);
+});
+cartBar.addEventListener('click', openDrawer);
+overlay.addEventListener('click', closeDrawer);
+document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
+waBtn.addEventListener('click', orderOnWhatsApp);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 
-// ---------- Init ----------
-renderGrid();
-renderCartBar();
-renderDrawer();
+// --- Init ---
+buildGrid();
+updateBar();
+updateDrawer();
