@@ -3,13 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Pooja House — Traditional</title>
+<title>The Pooja House</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Hind:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body data-shop="The Pooja House" data-cardstyle="overlay">
+
+<!-- PIN-code delivery gate -->
+<div id="pinGate" class="pin-gate">
+  <div class="pin-card">
+    <span class="brand-seal">P</span>
+    <h2>The Pooja House</h2>
+    <p class="pin-lead">Enter your area PIN code to check if we deliver near you.</p>
+    <form id="pinForm" class="pin-form" novalidate>
+      <input id="pinInput" class="pin-input" type="text" inputmode="numeric"
+             maxlength="6" placeholder="e.g. 560087" aria-label="6-digit PIN code" autocomplete="postal-code">
+      <button type="submit" class="pin-btn">Check delivery</button>
+    </form>
+    <p id="pinMsg" class="pin-msg" role="status" aria-live="polite"></p>
+    <p class="pin-hint">Now delivering to select areas · Demo PINs: 560087 · 560066 · 560037</p>
+  </div>
+</div>
 
 <header class="site-header">
   <div class="wrap header-inner">
@@ -22,71 +38,41 @@
     </a>
     <nav class="site-nav">
       <a href="#shop">Shop</a>
-      <a href="#about">Our Story</a>
-      <a href="#visit">Visit</a>
+      <a href="#contact">Contact</a>
     </nav>
+    <button id="deliverBadge" class="deliver-badge" hidden aria-label="Change delivery PIN code">
+      📍 <span id="deliverPin"></span> · Change
+    </button>
   </div>
 </header>
-
-<section class="hero">
-  <div class="wrap hero-inner">
-    <div class="hero-copy">
-      <span class="hero-eyebrow">Everyday essentials &amp; festive picks</span>
-      <h1>The warmth of a<br>neighbourhood <em>pooja shop</em>,<br>now a tap away.</h1>
-      <p class="hero-sub">Brass lamps, pure incense, fresh flowers and daily essentials — hand-picked, fairly priced, and delivered from our family shop to your home.</p>
-      <div class="hero-actions">
-        <a href="#shop" class="btn btn-primary">Start shopping</a>
-        <a href="#visit" class="btn btn-ghost">Find our store</a>
-      </div>
-      <ul class="hero-trust">
-        <li>🚚 Same-day local delivery</li>
-        <li>🌼 Fresh flowers daily</li>
-        <li>💬 Order on WhatsApp</li>
-      </ul>
-    </div>
-    <div class="hero-visual" aria-hidden="true">
-      <div class="hero-photo hero-photo-1"><span>🪔</span></div>
-      <div class="hero-photo hero-photo-2"><span>🌸</span></div>
-      <div class="hero-photo hero-photo-3"><span>✨</span></div>
-    </div>
-  </div>
-</section>
 
 <main class="wrap">
   <section id="shop" class="shop">
     <div class="section-head">
       <div>
         <h2>Shop the collection</h2>
-        <p>Fresh stock every morning · Delivered across the city</p>
+        <p>Fresh stock every morning · Same-day local delivery</p>
       </div>
       <span class="section-note">Tap <b>Add</b> to build your basket</span>
     </div>
     <div id="productGrid" class="product-grid"></div>
   </section>
-
-  <section id="about" class="story">
-    <div class="story-card">
-      <span class="story-mark">“</span>
-      <p>For fifty years our family has run a small shop on Temple Road — measuring turmeric by hand, tying garlands each dawn, and knowing every regular by name. This is that same shop, made easy to reach.</p>
-      <span class="story-by">— The family behind The Pooja House</span>
-    </div>
-  </section>
 </main>
 
-<footer id="visit" class="site-footer">
+<footer id="contact" class="site-footer">
   <div class="wrap footer-grid">
     <div>
       <span class="brand-name">The Pooja House</span>
       <p>12 Temple Road, Old Market<br>Open daily · 6:00 AM – 9:00 PM</p>
     </div>
     <div>
-      <span class="foot-h">Reach us</span>
+      <span class="foot-h">Contact</span>
       <p>+91 XXXXX XXXXX</p>
       <p>hello@poojahouse.example</p>
     </div>
     <div>
       <span class="foot-h">Delivery</span>
-      <p>Same-day within the city<br>Order on WhatsApp anytime</p>
+      <p>Same-day within serviceable areas<br>Order on WhatsApp anytime</p>
     </div>
   </div>
   <p class="wrap foot-fine">Design demo · placeholder pricing &amp; imagery.</p>

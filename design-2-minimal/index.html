@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pooja &amp; Co. — Minimal</title>
+<title>Pooja &amp; Co.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,35 +11,36 @@
 </head>
 <body data-shop="Pooja &amp; Co." data-cardstyle="catalog">
 
+<!-- PIN-code delivery gate -->
+<div id="pinGate" class="pin-gate">
+  <div class="pin-card">
+    <span class="brand-name">Pooja&thinsp;&amp;&thinsp;Co.</span>
+    <h2>Check delivery in your area</h2>
+    <p class="pin-lead">Enter your PIN code and we’ll confirm if we deliver to you.</p>
+    <form id="pinForm" class="pin-form" novalidate>
+      <input id="pinInput" class="pin-input" type="text" inputmode="numeric"
+             maxlength="6" placeholder="e.g. 560087" aria-label="6-digit PIN code" autocomplete="postal-code">
+      <button type="submit" class="pin-btn">Check delivery</button>
+    </form>
+    <p id="pinMsg" class="pin-msg" role="status" aria-live="polite"></p>
+    <p class="pin-hint">Now delivering to select areas · Demo PINs: 560087 · 560066 · 560037</p>
+  </div>
+</div>
+
 <header class="site-header">
   <div class="wrap header-inner">
     <a href="#" class="brand">
       <span class="brand-name">Pooja&thinsp;&amp;&thinsp;Co.</span>
     </a>
     <nav class="site-nav">
-      <a href="#shop">Catalogue</a>
-      <a href="#ethos">Ethos</a>
-      <a href="#visit">Contact</a>
+      <a href="#shop">Shop</a>
+      <a href="#contact">Contact</a>
     </nav>
+    <button id="deliverBadge" class="deliver-badge" hidden aria-label="Change delivery PIN code">
+      📍 <span id="deliverPin"></span> · Change
+    </button>
   </div>
 </header>
-
-<section class="hero">
-  <div class="wrap hero-inner">
-    <span class="hero-eyebrow">Everyday pooja essentials · thoughtfully sourced</span>
-    <h1>Quiet essentials for<br>a considered home.</h1>
-    <p class="hero-sub">A restrained, well-edited selection — brass, incense, fresh flowers and daily basics. Clean, honest, delivered.</p>
-    <div class="hero-actions">
-      <a href="#shop" class="btn btn-primary">View the catalogue</a>
-      <a href="#ethos" class="btn btn-text">Our approach ›</a>
-    </div>
-    <div class="hero-meta">
-      <div><span class="hm-num">50+</span><span class="hm-lbl">Years of trade</span></div>
-      <div><span class="hm-num">100%</span><span class="hm-lbl">Hand-checked</span></div>
-      <div><span class="hm-num">Daily</span><span class="hm-lbl">Fresh flowers</span></div>
-    </div>
-  </div>
-</section>
 
 <main class="wrap">
   <section id="shop" class="shop">
@@ -52,19 +53,9 @@
     </div>
     <div id="productGrid" class="product-grid"></div>
   </section>
-
-  <section id="ethos" class="ethos">
-    <span class="sh-index">02 —</span>
-    <h2>An unfussy way to shop.</h2>
-    <div class="ethos-grid">
-      <div class="ethos-item"><span class="ei-mark">✶</span><h3>Sourced by hand</h3><p>Each item is chosen and checked in our own shop — no drop-shipping, no filler.</p></div>
-      <div class="ethos-item"><span class="ei-mark">✶</span><h3>Honest pricing</h3><p>Fair, flat prices. What you see is what you pay, delivered locally the same day.</p></div>
-      <div class="ethos-item"><span class="ei-mark">✶</span><h3>One-tap ordering</h3><p>No accounts, no card details. Build a basket and confirm on WhatsApp in seconds.</p></div>
-    </div>
-  </section>
 </main>
 
-<footer id="visit" class="site-footer">
+<footer id="contact" class="site-footer">
   <div class="wrap footer-grid">
     <div class="foot-brand">
       <span class="brand-name">Pooja&thinsp;&amp;&thinsp;Co.</span>

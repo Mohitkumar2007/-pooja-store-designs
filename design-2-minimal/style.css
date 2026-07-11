@@ -37,6 +37,38 @@ a{text-decoration:none;color:inherit}
 .wrap{max-width:1120px;margin:0 auto;padding:0 24px}
 .sh-index{font-family:'Cormorant',serif;font-size:15px;letter-spacing:.16em;color:var(--gold);font-weight:600}
 
+/* ---------- PIN gate ---------- */
+body.gated{overflow:hidden}
+.pin-gate{position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:22px;background:rgba(35,32,27,.55);backdrop-filter:blur(6px)}
+.pin-gate.show{display:grid;animation:gateIn .35s ease}
+@keyframes gateIn{from{opacity:0}to{opacity:1}}
+.pin-card{
+  width:100%;max-width:420px;background:var(--white);border:1px solid var(--line);border-radius:18px;
+  padding:40px 30px 30px;text-align:center;box-shadow:0 30px 70px -22px rgba(0,0,0,.4);
+  animation:cardIn .4s cubic-bezier(.2,.9,.3,1.2);
+}
+@keyframes cardIn{from{transform:translateY(16px) scale(.97);opacity:0}to{transform:none;opacity:1}}
+.pin-card .brand-name{display:block;font-size:26px;margin-bottom:18px}
+.pin-card h2{font-family:'Cormorant',serif;font-size:29px;font-weight:600;margin-bottom:8px}
+.pin-lead{color:var(--muted);font-size:15px;margin-bottom:24px;line-height:1.5}
+.pin-form{display:flex;flex-direction:column;gap:10px}
+.pin-input{
+  width:100%;text-align:center;font-family:'Manrope',sans-serif;font-weight:700;font-size:22px;letter-spacing:.2em;
+  padding:15px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);transition:border-color .2s,box-shadow .2s;
+}
+.pin-input::placeholder{letter-spacing:.08em;font-size:17px;font-weight:500;color:#b7b0a4}
+.pin-input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(185,149,78,.14)}
+.pin-btn{background:var(--ink);color:var(--paper);border:none;padding:15px;border-radius:12px;font-family:'Manrope',sans-serif;font-weight:700;font-size:15.5px;cursor:pointer;transition:transform .15s,background .2s}
+.pin-btn:hover{background:#000;transform:translateY(-1px)}
+.pin-btn:active{transform:scale(.98)}
+.pin-msg{min-height:20px;margin-top:16px;font-size:14px;font-weight:600;line-height:1.45}
+.pin-msg.ok{color:#1FA855}
+.pin-msg.err{color:var(--clay)}
+.pin-hint{margin-top:16px;font-size:12px;color:var(--muted);letter-spacing:.02em}
+.deliver-badge{background:var(--white);color:var(--ink);border:1px solid var(--line);font-family:'Manrope',sans-serif;font-size:12.5px;font-weight:700;padding:7px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:border-color .2s}
+.deliver-badge:hover{border-color:var(--gold)}
+.deliver-badge[hidden]{display:none}
+
 /* ---------- Header ---------- */
 .site-header{position:sticky;top:0;z-index:40;background:rgba(247,245,240,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .header-inner{display:flex;align-items:center;justify-content:space-between;height:72px}

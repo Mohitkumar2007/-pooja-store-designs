@@ -8,6 +8,7 @@
 const SHOP_NUMBER = '91XXXXXXXXXX';                 // wa.me number placeholder
 const SHOP_NAME = document.body.dataset.shop || 'The Pooja Store';
 const CARD_STYLE = document.body.dataset.cardstyle || 'overlay'; // overlay | catalog
+const SERVICEABLE = ['560087', '560066', '560037']; // PIN codes we deliver to (demo)
 
 // --- Catalogue (English names, placeholder prices) ---
 const IMG = id => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=800&q=70`;
@@ -201,7 +202,58 @@ document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
 waBtn.addEventListener('click', orderOnWhatsApp);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
 
+// --- PIN-code delivery gate ---
+const pinGate    = document.getElementById('pinGate');
+const pinForm    = document.getElementById('pinForm');
+const pinInput   = document.getElementById('pinInput');
+const pinMsg     = document.getElementById('pinMsg');
+const deliverBadge = document.getElementById('deliverBadge');
+const deliverPin   = document.getElementById('deliverPin');
+
+function openGate() {
+  pinGate.classList.add('show');
+  document.body.classList.add('gated');
+  setTimeout(() => pinInput && pinInput.focus(), 60);
+}
+function closeGate() {
+  pinGate.classList.remove('show');
+  document.body.classList.remove('gated');
+}
+
+if (pinInput) {
+  pinInput.addEventListener('input', () => {
+    pinInput.value = pinInput.value.replace(/\D/g, '').slice(0, 6);
+    pinMsg.textContent = '';
+    pinMsg.className = 'pin-msg';
+  });
+}
+if (pinForm) {
+  pinForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const pin = pinInput.value.trim();
+    if (!/^\d{6}$/.test(pin)) {
+      pinMsg.className = 'pin-msg err';
+      pinMsg.textContent = 'Please enter a valid 6-digit PIN code.';
+      return;
+    }
+    if (SERVICEABLE.includes(pin)) {
+      pinMsg.className = 'pin-msg ok';
+      pinMsg.textContent = 'Great news — we deliver to your area! 🎉';
+      if (deliverPin) deliverPin.textContent = pin;
+      if (deliverBadge) deliverBadge.hidden = false;
+      setTimeout(closeGate, 650);
+    } else {
+      pinMsg.className = 'pin-msg err';
+      pinMsg.innerHTML = `Sorry — we don’t deliver to <b>${pin}</b> just yet. ` +
+        `We currently serve <b>560087</b>, <b>560066</b> &amp; <b>560037</b>. ` +
+        `Please try another PIN code.`;
+    }
+  });
+}
+if (deliverBadge) deliverBadge.addEventListener('click', openGate);
+
 // --- Init ---
 buildGrid();
 updateBar();
 updateDrawer();
+openGate();

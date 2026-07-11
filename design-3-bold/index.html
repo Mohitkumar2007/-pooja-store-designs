@@ -3,13 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pooja Bazaar — Bold</title>
+<title>Pooja Bazaar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body data-shop="Pooja Bazaar" data-cardstyle="overlay">
+
+<!-- PIN-code delivery gate -->
+<div id="pinGate" class="pin-gate">
+  <div class="pin-card">
+    <span class="pin-brand"><span class="brand-dot"></span><span class="brand-name">Pooja Bazaar</span></span>
+    <h2>Do we deliver to you?</h2>
+    <p class="pin-lead">Pop in your area PIN code to start shopping.</p>
+    <form id="pinForm" class="pin-form" novalidate>
+      <input id="pinInput" class="pin-input" type="text" inputmode="numeric"
+             maxlength="6" placeholder="e.g. 560087" aria-label="6-digit PIN code" autocomplete="postal-code">
+      <button type="submit" class="pin-btn">Check delivery</button>
+    </form>
+    <p id="pinMsg" class="pin-msg" role="status" aria-live="polite"></p>
+    <p class="pin-hint">Now delivering to select areas · Demo PINs: 560087 · 560066 · 560037</p>
+  </div>
+</div>
 
 <header class="site-header">
   <div class="wrap header-inner">
@@ -19,29 +35,13 @@
     </a>
     <nav class="site-nav">
       <a href="#shop">Shop</a>
-      <a href="#why">Why us</a>
-      <a href="#visit">Contact</a>
+      <a href="#contact">Contact</a>
     </nav>
-    <a href="#shop" class="nav-cta">Shop now</a>
+    <button id="deliverBadge" class="deliver-badge" hidden aria-label="Change delivery PIN code">
+      📍 <span id="deliverPin"></span> · Change
+    </button>
   </div>
 </header>
-
-<section class="hero">
-  <div class="wrap hero-inner">
-    <span class="hero-pill">⚡ Same-day local delivery</span>
-    <h1>Everything for your<br><span class="grad">celebrations</span>,<br>in a few taps.</h1>
-    <p class="hero-sub">Lamps, incense, flowers, brass &amp; daily essentials — bright, fresh, fairly priced. Fill your basket and check out on WhatsApp.</p>
-    <div class="hero-actions">
-      <a href="#shop" class="btn btn-primary">Start shopping</a>
-      <a href="#why" class="btn btn-outline">How it works</a>
-    </div>
-    <div class="hero-chips" aria-hidden="true">
-      <span>🪔 Lamps</span><span>🌿 Incense</span><span>🌸 Flowers</span><span>✨ Brassware</span><span>🎁 Gifting</span>
-    </div>
-  </div>
-  <div class="hero-blob hero-blob-a" aria-hidden="true"></div>
-  <div class="hero-blob hero-blob-b" aria-hidden="true"></div>
-</section>
 
 <main class="wrap">
   <section id="shop" class="shop">
@@ -51,21 +51,9 @@
     </div>
     <div id="productGrid" class="product-grid"></div>
   </section>
-
-  <section id="why" class="why">
-    <div class="why-card">
-      <span class="why-num">01</span><h3>Add to basket</h3><p>Tap the + on any item. Your running total appears instantly.</p>
-    </div>
-    <div class="why-card">
-      <span class="why-num">02</span><h3>Review &amp; adjust</h3><p>Open the cart bar to change quantities — no accounts, no fuss.</p>
-    </div>
-    <div class="why-card">
-      <span class="why-num">03</span><h3>Order on WhatsApp</h3><p>One tap sends your full order to us. We confirm &amp; deliver same day.</p>
-    </div>
-  </section>
 </main>
 
-<footer id="visit" class="site-footer">
+<footer id="contact" class="site-footer">
   <div class="wrap footer-grid">
     <div><span class="brand-name">Pooja Bazaar</span><p>Bright essentials, delivered fast.</p></div>
     <div><span class="foot-h">Visit</span><p>12 Temple Road, Old Market<br>Daily · 6 AM – 9 PM</p></div>
