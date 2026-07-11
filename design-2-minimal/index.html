@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Satvik & Co. — Minimal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-ring" aria-hidden="true"></span>
+      <span class="brand-name">Satvik&nbsp;&amp;&nbsp;Co.</span>
+    </div>
+    <nav class="site-nav">
+      <a href="#shop">Shop</a>
+      <a href="#about">Craft</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-text">
+    <p class="hero-eyebrow">Curated Pooja Essentials</p>
+    <h1>Ritual objects,<br>quietly beautiful.</h1>
+    <p class="hero-sub">A considered selection of diyas, incense and idols — sourced for those who notice detail.</p>
+    <a href="#shop" class="hero-cta">View the collection</a>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="hero-orb"></div>
+    <span class="hero-emoji">🪔</span>
+  </div>
+</section>
+
+<main>
+  <section id="shop" class="products">
+    <div class="section-head">
+      <span class="section-index">01 — Collection</span>
+      <h2>Everything for the altar</h2>
+    </div>
+    <div id="productGrid" class="product-grid"></div>
+  </section>
+
+  <section id="about" class="about-strip">
+    <div class="about-inner">
+      <span class="section-index">02 — Philosophy</span>
+      <p>We work with a small circle of artisans and temple suppliers, choosing pieces for material honesty and quiet craft — not volume. Every item is meant to be used, not just displayed.</p>
+    </div>
+  </section>
+</main>
+
+<footer id="contact" class="site-footer">
+  <div class="footer-inner">
+    <div>
+      <span class="brand-name footer-brand">Satvik &amp; Co.</span>
+      <p>4th Cross, Artisan Lane<br>Open Daily · 7:00 AM – 8:30 PM</p>
+    </div>
+    <div>
+      <p class="footer-heading">Contact</p>
+      <p>+91 XXXXX XXXXX</p>
+      <p>hello@satvikandco.in</p>
+    </div>
+  </div>
+  <p class="footer-bottom">Design demo — Satvik &amp; Co.</p>
+</footer>
+
+<div id="cartBar" class="cart-bar hidden">
+  <div class="cart-bar-info">
+    <span class="cart-bar-badge" id="cartCount">0</span>
+    <span class="cart-bar-text">
+      <strong id="cartItemsLabel">0 items</strong>
+      <span id="cartTotalLabel">₹0</span>
+    </span>
+  </div>
+  <span class="cart-bar-action">View cart</span>
+</div>
+
+<div id="cartDrawer" class="cart-drawer hidden">
+  <div class="drawer-handle" id="drawerHandle"></div>
+  <div class="drawer-header">
+    <h3>Your Cart</h3>
+    <button id="closeDrawer" class="drawer-close" aria-label="Close cart">✕</button>
+  </div>
+  <div id="drawerItems" class="drawer-items"></div>
+  <div class="drawer-footer">
+    <div class="drawer-total-row">
+      <span>Total</span>
+      <span id="drawerTotal">₹0</span>
+    </div>
+    <button id="whatsappBtn" class="whatsapp-btn">
+      Order on WhatsApp
+    </button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
